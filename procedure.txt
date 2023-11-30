@@ -1,0 +1,36 @@
+DELIMITER //
+
+CREATE PROCEDURE ApplyForLoan(
+    IN custmID VARCHAR(255),
+    IN vehID VARCHAR(255),
+    IN loanAmount DECIMAL(10, 2),
+    IN applicationDate DATE
+)
+BEGIN
+    DECLARE loanApplicationID VARCHAR(255);
+    
+    -- Generate a unique identifier for LoanApplicationID
+    SET loanApplicationID = UUID();
+    
+    -- Insert into LoanApplication table
+    INSERT INTO LoanApplication (LoanApplicationID, CustmID, VehID, LoanAmount, ApplicationDate, ApprovalStatus)
+    VALUES (loanApplicationID, custmID, vehID, loanAmount, applicationDate, 'Pending');
+END //
+
+DELIMITER ;
+
+mysql> CREATE PROCEDURE ApproveLoanApplication(IN loanApplicationID VARCHAR(255))
+    -> BEGIN
+    ->     -- Update LoanApplication table to set ApprovalStatus to 'Approved'
+    ->     UPDATE LoanApplication
+    ->     SET ApprovalStatus = 'Approved'
+    ->     WHERE LoanApplicationID = loanApplicationID;
+    ->
+    ->     -- Optionally, update other fields such as approval date
+    ->
+    ->     -- Additional steps, such as generating loan documents or notifying the customer, can be added here
+    -> END //
+Query OK, 0 rows affected (0.00 sec)
+
+
+CALL ApproveLoanApplication('c15c4b0e-83e2-11ee-a281-005056c00001');

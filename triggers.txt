@@ -1,0 +1,32 @@
+DELIMITER //
+
+CREATE TRIGGER before_insert_testride
+BEFORE INSERT
+ON testride FOR EACH ROW
+BEGIN
+    IF HOUR(NEW.ScheduledTime) < 9 OR HOUR(NEW.ScheduledTime) > 17 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Test rides are only allowed between 9 AM and 5 PM';
+    END IF;
+END//
+
+DELIMITER ;
+
+
+
+
+ check_duplicate_testride | INSERT | testride | BEGIN
+    DECLARE existing_testride INT;
+
+    SELECT COUNT(*) INTO existing_testride
+    FROM testride
+    WHERE CustmID = NEW.CustmID
+    AND ScheduledDate = NEW.ScheduledDate
+    AND ScheduledTime = NEW.ScheduledTime;
+
+    IF existing_testride > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The customer has already booked a test ride at the same date and time.';
+    END IF;
+
+

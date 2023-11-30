@@ -1,0 +1,20 @@
+ DELIMITER //
+ CREATE FUNCTION GetLoanStatusAlternative(CustmID VARCHAR(255), VehID VARCHAR(255)) RETURNS VARCHAR(50) DETERMINISTIC READS SQL DATA
+     BEGIN
+         DECLARE loanCount INT;
+    
+         -- Check if there is any approved loan application for the customer and vehicle
+         SELECT COUNT(*) INTO loanCount
+         FROM LoanApplication
+         WHERE CustmID = CustmID AND VehID = VehID AND ApprovalStatus = 'Approved';
+    
+         IF loanCount > 0 THEN
+             RETURN 'Loan Approved';
+         ELSE
+             RETURN 'Loan Not Approved';
+         END IF;
+     END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
