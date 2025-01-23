@@ -39,9 +39,8 @@ How to Use
 Clone the repository.
 Set up the MySQL database using the provided carz.sql file.
 Configure the database connection in the CarZ.py file.
+
 Run the application using Streamlit:
-bash
-Copy
-Edit
+
 streamlit run CarZ.py
 Access the web interface and explore the features.
